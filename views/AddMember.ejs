@@ -10,6 +10,17 @@
             <input name="rollno" type="text">
             <input name="submit" type="submit" >
         </div>
+        <br>
+        <br>
+        <% if (locals.texterror) { %>
+
+          <label ><%=texterror%></label>
+         
+         <% } %>
+         
+
+
+        <li><a href="/adminside">Return to Admin Side</a> </li>
 </form>
 
 </body>

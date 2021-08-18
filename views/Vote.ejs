@@ -9,13 +9,26 @@
         <input name="studentrollno" type="text">
         <br>
         <br>
-        <% for (var i=0;i <MemberData.length;i++)
-        {%>
-            <input type="radio" name="member" value="<%=MemberData[i]%>"><%=MemberData[i]%>
-            <br>
-        <%}
-         %>
+        <% if(locals.MemberData!== undefined) {%>
+        
+            <% for (var i=0;i <MemberData.length;i++)
+            {%>
+                <input type="radio" name="member" value="<%=MemberData[i].name%>"><%=MemberData[i].name%>
+                <br>
+            <%}
+        }%>
+
+        <% if (locals.texterror) { %>
+
+            <label ><%=texterror%></label>
+           
+           <% } %>
+        
          <input type="submit" >
+
+         <br>
+         <br>
+         <li><a href="/votingside">Return to Vote</a> </li>
     </form>
 
 </body>

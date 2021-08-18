@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const { error } = require('console')
 const port = 3000
 var values = []
-var voting = {}
+
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded())
 // Parse JSON bodies (as sent by API clients)
@@ -17,10 +18,32 @@ app.get('/', (req, res) => {
     res.render('dashBoard')
 })
 
+app.get('/adminside', (req, res) => {
+    res.render('Admin')
+})
+app.get('/votingside', (req, res) => {
+    res.render('Voter')
+})
+
 //AddMember
 app.post('/SendRollNo', (req, res) => {
-    values.push(req.body.rollno)
-    res.render('AddMember')
+    var temp = { name: req.body.rollno, vote: 0 }
+    var index = values.findIndex(
+        (valuesname) => valuesname.name === req.body.rollno
+    )
+    console.log(values)
+    console.log(index)
+    if (index === -1) {
+        values.push(temp)
+        res.render('AddMember')
+    } else {
+        res.render('AddMember', { texterror: 'member is already register.' })
+    }
+})
+
+app.get('/getPollResulte', (req, res) => {
+    values.sort((x, y) => (x.vote < y.vote ? 1 : -1))
+    res.render('PollResulte', { polldata: values })
 })
 
 app.get('/getMembers', (req, res) => {
@@ -40,14 +63,17 @@ app.get('/vote', (req, res) => {
 })
 
 app.post('/vote', (req, res) => {
-    var getcnt = voting[req.body.member]
-    console.log(getcnt)
-    if (getcnt === undefined) {
-        voting[req.body.member] = 1
+    var index = values.findIndex(
+        (valuesname) => valuesname.name === req.body.member
+    )
+
+    if (index !== -1) {
+        values[index].vote = values[index].vote + 1
     } else {
-        voting[req.body.member] = getcnt + 1
+        res.render('Vote', { texterror: 'member not defined in list' })
     }
-    console.log(voting)
+
+    console.log(values)
     res.render('Vote', { MemberData: values })
 })
 
